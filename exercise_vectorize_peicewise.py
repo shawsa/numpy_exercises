@@ -14,8 +14,6 @@ import numpy as np
 import numpy.linalg as la
 import timeit
 
-from solution_vectorize_piecewise import numpy_masking, numpy_peicewise
-
 def sol_check(X):
 
     def f(x):
@@ -26,12 +24,12 @@ def sol_check(X):
         else:
             return 2
 
-    A = np.empty_like(X).flatten()
-    for i, x in enumerate(X.flatten()):
+    A = np.empty_like(X).ravel()
+    for i, x in enumerate(X.ravel()):
         A[i] = f(x)
     return A.reshape(X.shape)
 
-solution_list = [numpy_masking, numpy_peicewise]
+solution_list = []
 
 '''
 Code your own solution as a function with the same signature as the
@@ -55,6 +53,25 @@ def sol1(X):
 
 solution_list.append(sol1)
 
+def sol2(X):
+
+    def f(x):
+        if x < 0.1:
+            return 0
+        elif x < .5:
+            return 1
+        else:
+            return 2
+
+    A = np.empty_like(X)
+    for index, x in np.ndenumerate(X):
+        A[index] = f(x)
+    return A
+
+solution_list.append(sol2)
+
+from solution_vectorize_piecewise import numpy_masking, numpy_peicewise
+solution_list += [numpy_masking, numpy_peicewise]
 
 if __name__ == '__main__':
 
